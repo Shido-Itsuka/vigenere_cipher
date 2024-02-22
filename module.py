@@ -34,16 +34,16 @@ def vigenere_decipher(ciphertext, key):
 
 
 # Пример использования
-key = 'ключ'  # Русский ключ
-plaintext = 'Пример текста для шифрования'
-ciphertext = vigenere_cipher(plaintext, key)
-print('Зашифрованный текст:', ciphertext)
-decrypted_text = vigenere_decipher(ciphertext, key)
-print('Расшифрованный текст:', decrypted_text)
-
-key = 'LEMON'
-plaintext = 'Attack at dawn!'
-ciphertext = vigenere_cipher(plaintext, key)
-print('Зашифрованный текст:', ciphertext)
-decrypted_text = vigenere_decipher(ciphertext, key)
-print('Расшифрованный текст:', decrypted_text)
+# key = 'ключ'  # Русский ключ
+# plaintext = 'Пример текста для шифрования'
+# ciphertext = vigenere_cipher(plaintext, key)
+# print('Зашифрованный текст:', ciphertext)
+# decrypted_text = vigenere_decipher(ciphertext, key)
+# print('Расшифрованный текст:', decrypted_text)
+#
+# key = 'LEMON'
+# plaintext = 'Attack at dawn!'
+# ciphertext = vigenere_cipher(plaintext, key)
+# print('Зашифрованный текст:', ciphertext)
+# decrypted_text = vigenere_decipher(ciphertext, key)
+# print('Расшифрованный текст:', decrypted_text)
