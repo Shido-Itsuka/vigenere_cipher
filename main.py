@@ -2,6 +2,7 @@ import flet as ft
 from flet_core.control import Control
 import module
 import re
+import random as rd
 
 
 def main(page: ft.Page) -> None:
@@ -22,12 +23,6 @@ def main(page: ft.Page) -> None:
         color_scheme_seed='#5a84ff'
     )
 
-    def custom_replacement_string(text):
-        pass
-
-    def custom_input_filter(lang: str):
-        pass
-
     def on_change_rail(e):
         match e.control.selected_index:
             case 0:
@@ -41,43 +36,62 @@ def main(page: ft.Page) -> None:
         page.update()
 
     def on_change_text_input(e):
-        if e.control.value == '':
+        if text_input.value == '':
             key_input.disabled = True
             key_input.value = ''
-            e.control.error_text = None
+            text_input.data = None
+            key_input.max_length = None
+            key_input.update()
+            text_input.error_text = None
+            text_input.update()
         else:
-            if re.fullmatch(r'[а-яА-ЯёЁ]+', e.control.value):
+            if re.fullmatch(r'[а-яА-ЯёЁ]+', text_input.value):
+                text_input.data = 'RU'
                 key_input.suffix_text = 'RU'
                 key_input.disabled = False
-                e.control.error_text = None
-            elif re.fullmatch(r'[a-zA-Z]+', e.control.value):
+                key_input.max_length = 33
+                key_input.update()
+                text_input.error_text = None
+            elif re.fullmatch(r'[a-zA-Z]+', text_input.value):
+                text_input.data = 'EN'
                 key_input.suffix_text = 'EN'
                 key_input.disabled = False
-                e.control.error_text = None
+                key_input.max_length = 26
+                key_input.update()
+                text_input.error_text = None
             else:
-                e.control.error_text = 'Только русский или английский текст'
+                text_input.error_text = 'Только русский или английский текст'
+                text_input.data = '??'
                 key_input.disabled = True
 
         page.update()
 
-    key_input_memory: [str, str] = ['', '']
+    def on_click_paste(e):
+        text_input.value = page.get_clipboard()
+        text_input.update()
+        text_input.on_change(e)
 
-    def key_input_change(e):
-        if e.control.value == '':
-            key_input_memory[0] = ''
-            key_input_memory[1] = ''
+    def on_click_generate_key(e):
+        if text_input.data == 'RU':
+            letters = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя'
+            length = rd.randint(4, len(letters)-4)
+            out = ''.join(rd.sample(letters, length))
+            key_input.value = out
+            key_input.update()
 
-        if key_input_memory[0] == '':
-            key_input_memory[0] = e.control.value
-        if key_input_memory[0] and key_input_memory[1] != '':
-            key_input_memory[0] = key_input_memory[1]
-            key_input_memory[1] = e.control.value
-        elif key_input_memory[0] != '':
-            key_input_memory[1] = e.control.value
+        elif text_input.data == 'EN':
+            letters = 'abcdefghigklmnopqrstuvwxyz'
+            length = rd.randint(4, len(letters) - 4)
+            out = ''.join(rd.sample(letters, length))
+            key_input.value = out
+            key_input.update()
+        elif text_input.data == '??':
+            print('Undefined')
         else:
-            print(f'Непредвиденная ошибка: {key_input_memory}')
+            pass
 
-        print(f'key_input_memory: {key_input_memory}\nkey_input.value: {key_input.value}')
+    def on_click_copy(e):
+        pass
 
     rail = ft.NavigationRail(
         selected_index=0,
@@ -154,6 +168,7 @@ def main(page: ft.Page) -> None:
                             icon=ft.icons.PASTE,
                             tooltip='Вставить',
                             icon_color=ft.colors.ON_BACKGROUND,
+                            on_click=on_click_paste
                         ),
 
                         text_input := ft.TextField(
@@ -163,6 +178,9 @@ def main(page: ft.Page) -> None:
                             border_color=ft.colors.OUTLINE,
                             focused_border_color=ft.colors.ON_SURFACE_VARIANT,
                             label='Текст для шифрования',
+                            hint_text='Введите текст для шифрования',
+                            input_filter=ft.InputFilter(allow=True, regex_string=r"[a-zA-Zа-яА-ЯёЁ]",
+                                                        replacement_string=""),
                             on_change=on_change_text_input
                         )
                     ]
@@ -173,20 +191,22 @@ def main(page: ft.Page) -> None:
                     controls=[
                         ft.IconButton(
                             icon=ft.icons.CASINO_OUTLINED,
-                            tooltip='Генерировать'
+                            tooltip='Генерировать',
+                            on_click=on_click_generate_key
                         ),
                         key_input := ft.TextField(
                             width=355,
                             border_color=ft.colors.OUTLINE,
                             focused_border_color=ft.colors.ON_SURFACE_VARIANT,
                             max_lines=2,
-                            max_length=33,
                             label='Ключ',
+                            hint_text='Введите ключ',
                             capitalization=ft.TextCapitalization.CHARACTERS,
-                            # input_filter=ft.TextOnlyInputFilter(),
                             suffix_text='',
-                            on_change=key_input_change,
-                            disabled=True
+                            disabled=True,
+                            input_filter=ft.InputFilter(allow=True,
+                                                        regex_string=r"[a-zA-Z]",
+                                                        replacement_string="")
                         ),
                         ft.VerticalDivider(
                             visible=True,
@@ -282,7 +302,9 @@ def main(page: ft.Page) -> None:
 
 
 if __name__ == '__main__':
-    ft.app(target=main,
-           assets_dir='assets',
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
 
+    ft.app(target=main,
+           assets_dir='assets'
            )
