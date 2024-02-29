@@ -1,8 +1,9 @@
 import flet as ft
 from flet_core.control import Control
-import module
 import re
 import random as rd
+import module
+import decode_body_file
 
 
 def main(page: ft.Page) -> None:
@@ -36,6 +37,9 @@ def main(page: ft.Page) -> None:
         page.update()
 
     def on_change_text_input(e):
+        text_output.value = ''
+        text_output.disabled = True
+        text_output.update()
         if text_input.value == '':
             key_input.disabled = True
             key_input.value = ''
@@ -44,25 +48,35 @@ def main(page: ft.Page) -> None:
             key_input.update()
             text_input.error_text = None
             text_input.update()
+            code_button.disabled = True
+            code_button.update()
         else:
-            if re.fullmatch(r'[а-яА-ЯёЁ]+', text_input.value):
+            if re.fullmatch(r'[а-яА-ЯёЁ\n ]+', text_input.value):
                 text_input.data = 'RU'
                 key_input.suffix_text = 'RU'
                 key_input.disabled = False
                 key_input.max_length = 33
+                key_input.input_filter.regex_string = r"[а-яА-ЯёЁ\n]"
                 key_input.update()
                 text_input.error_text = None
-            elif re.fullmatch(r'[a-zA-Z]+', text_input.value):
+                code_button.disabled = False
+                code_button.update()
+            elif re.fullmatch(r"[a-zA-Z\n ]+", text_input.value):
                 text_input.data = 'EN'
                 key_input.suffix_text = 'EN'
                 key_input.disabled = False
                 key_input.max_length = 26
+                key_input.input_filter.regex_string = r"[a-zA-Z\n]"
                 key_input.update()
                 text_input.error_text = None
+                code_button.disabled = False
+                code_button.update()
             else:
                 text_input.error_text = 'Только русский или английский текст'
                 text_input.data = '??'
                 key_input.disabled = True
+                code_button.disabled = True
+                code_button.update()
 
         page.update()
 
@@ -75,23 +89,44 @@ def main(page: ft.Page) -> None:
         if text_input.data == 'RU':
             letters = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя'
             length = rd.randint(4, len(letters)-4)
-            out = ''.join(rd.sample(letters, length))
+            out = (''.join(rd.sample(letters, length))).upper()
             key_input.value = out
             key_input.update()
 
         elif text_input.data == 'EN':
             letters = 'abcdefghigklmnopqrstuvwxyz'
             length = rd.randint(4, len(letters) - 4)
-            out = ''.join(rd.sample(letters, length))
+            out = (''.join(rd.sample(letters, length))).upper()
             key_input.value = out
             key_input.update()
         elif text_input.data == '??':
             print('Undefined')
         else:
             pass
+        on_change_key_input(e)
+
+    def on_change_key_input(e):
+        if key_input.value != '':
+            code_button.disabled = False
+            code_button.update()
+        else:
+            code_button.disabled = True
+        text_output.value = ''
+        text_output.disabled = True
+        text_output.update()
+
+    def on_click_code(e):
+        out = module.vigenere_cipher(
+            text=text_input.value,
+            key=key_input.value,
+        )
+        text_output.disabled = False
+        text_output.value = out
+        text_output.update()
 
     def on_click_copy(e):
-        pass
+        if not text_output.disabled:
+            page.set_clipboard(text_output.value)
 
     rail = ft.NavigationRail(
         selected_index=0,
@@ -179,7 +214,7 @@ def main(page: ft.Page) -> None:
                             focused_border_color=ft.colors.ON_SURFACE_VARIANT,
                             label='Текст для шифрования',
                             hint_text='Введите текст для шифрования',
-                            input_filter=ft.InputFilter(allow=True, regex_string=r"[a-zA-Zа-яА-ЯёЁ]",
+                            input_filter=ft.InputFilter(allow=True, regex_string=r"[a-zA-Zа-яА-ЯёЁ\n ]",
                                                         replacement_string=""),
                             on_change=on_change_text_input
                         )
@@ -206,18 +241,21 @@ def main(page: ft.Page) -> None:
                             disabled=True,
                             input_filter=ft.InputFilter(allow=True,
                                                         regex_string=r"[a-zA-Z]",
-                                                        replacement_string="")
+                                                        replacement_string=""),
+                            on_change=on_change_key_input
                         ),
                         ft.VerticalDivider(
                             visible=True,
                             width=40
                         ),
-                        ft.OutlinedButton(
+                        code_button := ft.OutlinedButton(
                             text='Шифровать',
                             style=ft.ButtonStyle(
                                 shape=ft.RoundedRectangleBorder(radius=5),
                             ),
-                            scale=1.2
+                            scale=1.2,
+                            on_click=on_click_code,
+                            disabled=True
                         )
                     ]
                 ),
@@ -227,18 +265,19 @@ def main(page: ft.Page) -> None:
                     controls=[
                         ft.IconButton(
                             icon=ft.icons.COPY,
-                            tooltip='Копировать'
+                            tooltip='Копировать',
+                            on_click=on_click_copy
                         ),
 
-                        ft.TextField(
+                        text_output := ft.TextField(
                             read_only=True,
                             max_lines=5,
                             multiline=True,
                             width=355,
                             border_color=ft.colors.OUTLINE,
                             focused_border_color=ft.colors.ON_SURFACE_VARIANT,
-                            label='Зашифрованный текст'
-
+                            label='Зашифрованный текст',
+                            disabled=True,
                         )
                     ]
                 )
