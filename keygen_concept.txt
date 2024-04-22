@@ -1,4 +1,10 @@
-key: XXXX-YYYY-ZZZZ-1234
+key: 0XXXX-0YYYY-ZZZZZ-12345
+
+0:
+    A = +x, +y
+    B = -x, +y
+    C = +x, -y
+    D = -x, -y
 
 XXXX -> (x, y) of 1st "y = f(x)"
     XX = (x..) and XX (..y)
@@ -6,13 +12,10 @@ XXXX -> (x, y) of 1st "y = f(x)"
 YYYY -> (x, y) of 2nd "y = f(x)"
     bla bla bla
 
-ZZZZ -> type of key + salt
+ZZZZZ -> type of key + salt
     P.S. 1st type is "unlimited" - unlocks all in program
     2nd type is ... <in the process of inventing>
 
-1234 -> salt
-
-
-
+12345 -> random sequence of numbers which can be decode
 
 
