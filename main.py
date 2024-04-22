@@ -167,7 +167,7 @@ def main(page: ft.Page) -> None:
 if __name__ == '__main__':
     import logging
 
-    logging.basicConfig(level=logging.DEBUG)
+    # logging.basicConfig(level=logging.DEBUG)
 
     ft.app(target=main,
            assets_dir='assets'
