@@ -6,6 +6,23 @@ key: 0XXXX-0YYYY-ZZZZZ-12345
     C = +x, -y
     D = -x, -y
 
+    E = A + X.X|X X
+    F = A + X X|X.X
+    G = A + X.X|X.X
+
+    H = B + X.X|X X
+    I = B + X X|X.X
+    J = B + X.X|X.X
+
+    K = C + X.X|X X
+    L = C + X X|X.X
+    M = C + X.X|X.X
+
+    N = D + X.X|X X
+    O = D + X X|X.X
+    P = D + X.X|X.X
+
+
 XXXX -> (x, y) of 1st "y = f(x)"
     XX = (x..) and XX (..y)
 
@@ -18,4 +35,4 @@ ZZZZZ -> type of key + salt
 
 12345 -> random sequence of numbers which can be decode
 
-
+G1010-C8872-10203-93284 - type of correct license key
