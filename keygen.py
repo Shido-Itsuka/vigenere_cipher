@@ -26,6 +26,7 @@ class KeyGen:
 
 class KeyInput:
     def __init__(self, key):
+        self.type = None
         self.key = key
         try:
             len(self.key.split('-')) == 4
@@ -33,16 +34,24 @@ class KeyInput:
             raise ValueError("Key must be in format 0XXXX-0YYYY-ZZZZ-1234")
 
     def part1_validate(self, part):
-        return True
+        if part == 'G1010':
+            return True
 
     def part2_validate(self, part):
-        return True
+        if part == 'C8872':
+            return True
 
     def part3_validate(self, part):
-        return True
+        if part == '10203':
+            if part[0] == '1':
+                self.type = 'Полный доступ'
+            else:
+                self.type = '???'
+            return True
 
     def part4_validate(self, part):
-        return True
+        if part == '93284':
+            return True
 
     def validate(self):
         if [len(x) == 5 for x in self.key.split('-')] and self.key.count('-') == 3:
@@ -66,5 +75,5 @@ class KeyInput:
 
 
 if __name__ == "__main__":
-    k = KeyInput('XXXX-YYYY-ZZZZ-1234')
+    k = KeyInput('AXXXX-BYYYY-ZZZZZ-12345')
     k.main()
