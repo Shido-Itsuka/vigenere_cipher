@@ -157,6 +157,9 @@ def decode_page(page: ft.Page) -> Container:
                         decode_button := ft.OutlinedButton(
                             text='Дешифровать',
                             style=ft.ButtonStyle(
+                                # color={
+                                #     ft.MaterialState.HOVERED: ft.colors.BLUE
+                                # },
                                 shape=ft.RoundedRectangleBorder(radius=5),
                             ),
                             scale=1.2,

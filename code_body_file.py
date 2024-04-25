@@ -160,6 +160,10 @@ def code_page(page: ft.Page) -> Container:
                         code_button := ft.OutlinedButton(
                             text='Шифровать',
                             style=ft.ButtonStyle(
+                                # color={
+                                #     ft.MaterialState.HOVERED: ft.colors.BLUE,
+                                #     ft.MaterialState.DISABLED: ft.colors.OUTLINE
+                                # },
                                 shape=ft.RoundedRectangleBorder(radius=5),
                             ),
                             scale=1.2,
