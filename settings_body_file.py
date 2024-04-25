@@ -5,7 +5,6 @@ import keygen
 
 
 def settings_page(page: ft.Page) -> Container:
-
     def anim_act_menu(status: bool):
         # if status is True:
         #     act_menu.shadow = ft.BoxShadow(
@@ -30,6 +29,11 @@ def settings_page(page: ft.Page) -> Container:
             )
             page.snack_bar.open = True
             anim_act_menu(True)
+            act_status.value = 'Активировано'
+            act_status_icon.selected = True
+            license_type.value = k.type
+            license_type_row.visible = True
+            timer_container.visible = False
         else:
             page.snack_bar = ft.SnackBar(
                 ft.Text('Неверный лицензионный ключ!'),
@@ -62,7 +66,9 @@ def settings_page(page: ft.Page) -> Container:
                                     license_input := ft.TextField(
                                         label='Лицензионный ключ',
                                         hint_text='Введите код для активации программы',
-                                        max_length=23
+                                        max_length=23,
+                                        border_color=ft.colors.WHITE24,
+                                        focused_border_color=ft.colors.ON_SURFACE_VARIANT,
                                     ),
                                     ft.Row(
                                         controls=[
@@ -91,6 +97,7 @@ def settings_page(page: ft.Page) -> Container:
                             border=ft.border.all(1, ft.colors.WHITE24),
                             border_radius=ft.border_radius.all(10),
                             width=400,
+                            height=230,
                             padding=15,
                             animate=ft.animation.Animation(
                                 curve=ft.AnimationCurve.EASE_IN_OUT_CIRC,
@@ -102,34 +109,45 @@ def settings_page(page: ft.Page) -> Container:
                                 controls=[
                                     ft.Row(
                                         controls=[
-                                            ft.Text(
-                                                'Активировано',
-                                                size=20
+                                            act_status := ft.Text(
+                                                'Не активировано',
+                                                # size=20,
+                                                theme_style=ft.TextThemeStyle.TITLE_LARGE,
                                             ),
-                                            ft.Icon(
-                                                ft.icons.CHECK_CIRCLE_OUTLINE,
-                                                color=ft.colors.GREEN_500
+                                            act_status_icon := ft.IconButton(
+                                                icon=ft.icons.WARNING_AMBER_ROUNDED,
+                                                icon_color=ft.colors.YELLOW_800,
+                                                selected_icon=ft.icons.CHECK_CIRCLE_OUTLINE_ROUNDED,
+                                                selected_icon_color=ft.colors.GREEN_500,
+                                                disabled=True
                                             )
-                                        ]
+                                        ],
+                                        spacing=0,
+                                        alignment=ft.MainAxisAlignment.START
                                     ),
-                                    ft.Row(
+                                    license_type_row := ft.Row(
                                         controls=[
                                             ft.Text(
                                                 'Тип лицензии:',
-                                                size=16
+                                                size=15,
+                                                theme_style=ft.TextThemeStyle.BODY_MEDIUM,
+                                                weight=ft.FontWeight.W_500
                                             ),
-                                            ft.Text(
-                                                'Полноценная',
-                                                size=16
+                                            license_type := ft.Text(
+                                                '',
+                                                size=15,
+                                                theme_style=ft.TextThemeStyle.BODY_MEDIUM,
+
                                             )
                                         ],
-                                        alignment=ft.MainAxisAlignment.START
+                                        alignment=ft.MainAxisAlignment.START,
+                                        visible=False
                                     ),
                                     ft.Divider(
                                         20,
                                         2
                                     ),
-                                    ft.Container(
+                                    timer_container := ft.Container(
                                         content=ft.Text(
                                             '30:00',
                                             size=40
@@ -152,7 +170,7 @@ def settings_page(page: ft.Page) -> Container:
                             border_radius=ft.border_radius.all(10),
                             padding=15,
                             expand=True,
-                            height=229
+                            height=230
                         ),
                         ft.VerticalDivider(0, color=ft.colors.TRANSPARENT),
                     ],
@@ -164,4 +182,3 @@ def settings_page(page: ft.Page) -> Container:
     )
 
     return settings_body
-
