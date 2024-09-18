@@ -1,2 +1,2 @@
-# vigner_cipher
-A simple Vignere Cipher with interface 
+# vigenere_cipher
+A simple Vigenere Cipher with interface 
