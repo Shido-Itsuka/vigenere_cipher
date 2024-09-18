@@ -21,7 +21,11 @@ def decode_page(page: ft.Page) -> Container:
             text_input.update()
             decode_button.disabled = True
             decode_button.update()
+            clear_button.disabled = True
+            clear_button.update()
         else:
+            clear_button.disabled = False
+            clear_button.update()
             if re.fullmatch(r'[а-яА-ЯёЁ\n ]+', text_input.value):
                 text_input.data = 'RU'
                 key_input.suffix_text = 'RU'
@@ -95,6 +99,20 @@ def decode_page(page: ft.Page) -> Container:
         if not text_output.disabled:
             page.set_clipboard(text_output.value)
 
+    def on_click_clear(e: Control):
+        text_input.value = ''
+        key_input.value = ''
+        text_output.value = ''
+        key_input.disabled = True
+        decode_button.disabled = True
+        text_output.disabled = True
+        clear_button.disabled = True
+        text_input.update()
+        key_input.update()
+        decode_button.update()
+        text_output.update()
+        clear_button.update()
+
     decode_body = ft.Container(
         expand=True,
         alignment=ft.alignment.center,
@@ -123,6 +141,19 @@ def decode_page(page: ft.Page) -> Container:
                             input_filter=ft.InputFilter(allow=True, regex_string=r"[a-zA-Zа-яА-ЯёЁ\n ]",
                                                         replacement_string=""),
                             on_change=on_change_text_input
+                        ),
+                        ft.VerticalDivider(
+                            visible=True,
+                            width=40
+                        ),
+                        clear_button := ft.OutlinedButton(
+                            text='Очистить',
+                            style=ft.ButtonStyle(
+                                shape=ft.RoundedRectangleBorder(radius=5),
+                            ),
+                            scale=1.2,
+                            on_click=on_click_clear,
+                            disabled=True,
                         )
                     ]
                 ),
@@ -133,7 +164,8 @@ def decode_page(page: ft.Page) -> Container:
                         ft.IconButton(
                             icon=ft.icons.CASINO_OUTLINED,
                             tooltip='Генерировать',
-                            on_click=on_click_generate_key
+                            on_click=on_click_generate_key,
+                            icon_color=ft.colors.ON_BACKGROUND
                         ),
                         key_input := ft.TextField(
                             width=355,
@@ -157,9 +189,10 @@ def decode_page(page: ft.Page) -> Container:
                         decode_button := ft.OutlinedButton(
                             text='Дешифровать',
                             style=ft.ButtonStyle(
-                                # color={
-                                #     ft.MaterialState.HOVERED: ft.colors.BLUE
-                                # },
+                                color={
+                                    ft.MaterialState.HOVERED: ft.colors.BLUE,
+                                    ft.MaterialState.DISABLED: ft.colors.OUTLINE
+                                },
                                 shape=ft.RoundedRectangleBorder(radius=5),
                             ),
                             scale=1.2,
@@ -175,7 +208,8 @@ def decode_page(page: ft.Page) -> Container:
                         ft.IconButton(
                             icon=ft.icons.COPY,
                             tooltip='Копировать',
-                            on_click=on_click_copy
+                            on_click=on_click_copy,
+                            icon_color=ft.colors.ON_BACKGROUND
                         ),
 
                         text_output := ft.TextField(
