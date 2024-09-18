@@ -1,5 +1,6 @@
 import flet as ft
 from flet_core.control import Control
+import json
 
 import decode_body_file
 import code_body_file
@@ -8,7 +9,7 @@ import info_body_file
 
 
 def main(page: ft.Page) -> None:
-    page.title = 'Vigner Cipher'
+    page.title = 'Vigenere Cipher'
     page.window_focused = True
     page.theme_mode.SYSTEM = True
 
