@@ -17,7 +17,7 @@ def settings_page(page: ft.Page) -> Container:
                 # row for container with activation menu
                 ft.Row(
                     [
-                        ft.Text('Тут могут быть настройки')
+                        ft.Text('Настроек в данный момент нет')
                     ],
                     alignment=ft.alignment.center,
                     spacing=20
