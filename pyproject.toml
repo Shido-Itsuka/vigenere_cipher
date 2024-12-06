@@ -1,0 +1,17 @@
+[build-system]
+requires = ["flet>=0.7.0"]
+build-backend = "flet.build_support"
+
+[tool.flet]
+main-script = "main.py"
+icon = "assets/icon.png"
+name = "Vigenere Cipher"
+org = "com.aesirelectronics" # --org
+product = "vigenere_cipher" # --product
+company = "AEsir Electronics" # --company
+copyright = "Copyright (C) 2024 AEsir Electronics. All rights reserved." # --copyright
+build_number = 1 # --build-number
+version = "0.9.0" # --version
+
+[tool.flet.add-data]
+assets = "assets"
